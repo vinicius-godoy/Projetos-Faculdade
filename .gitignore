@@ -1,0 +1,8 @@
+#Arquivos dados pelo professor
+*.docx
+*.doc
+#Arquivos de Obj e Executáveis
+*.o
+*.exe
+#Arquivos gerados por Main
+*.txt
