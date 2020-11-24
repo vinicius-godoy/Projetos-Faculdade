@@ -3,9 +3,6 @@
 #include <conio.h> //Funções getch e getche
 #include <locale.h> //Função de configuração de idioma da tabela ASCII
 
-//Macros
-#define NUM_PROD 5 //Macro com o número de produtos, basta aumentar aqui para mudar o programa.
-
 //Estrutura
 struct estoque{
     unsigned char nome[31];
@@ -179,37 +176,39 @@ void menu_cadastrar(struct estoque *ps)
     int i;
     char menu;
 
-    for(i = 0; i < NUM_PROD; i++){
+    for(i = 0; menu != 'B' || menu != 'b'; i++){
         printf("Entre com os dados do produto que deseja cadastrar!\n\n");
-        printf("Nome do produto %d: ", i + 1);
+        printf("==================================|PRODUTO %3d|==================================\n", i + 1);
+        printf("Nome do produto: ", i + 1);
         gets(ps -> nome);
-        printf("Quantidade Atual do produto %d: ", i + 1);
+        printf("Quantidade Atual do produto: ", i + 1);
         scanf("%d", &ps -> qtd_atual);
-        printf("Quantidade Mínima do produto %d: ", i + 1);
+        printf("Quantidade Mínima do produto: ", i + 1);
         scanf("%d", &ps -> qtd_min);
-        printf("Data de validade do produto %d(DD/MM/AA): ", i + 1);
+        printf("Data de validade do produto (DD/MM/AA): ", i + 1);
         scanf("%d/%d/%d", &ps -> dia_validade, &ps -> mes_validade, &ps -> ano_validade);
+        printf("=================================================================================\n");
 
+        //Se é a primeira iteração chama a função como escrita pra resetar arquivo, caso contrário anexa
         if(i == 0){
             escreverEstrutura(ps, "w", 0);
         }else{
             escreverEstrutura(ps, "a", 0);
         }
+
+        printf("\nPressione 'ESPAÇO' para adicionar outro produto\n");
+        printf("Pressione 'B' para voltar ao menu\n");
+        do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
+        if(menu == 'B' || menu == 'b'){system("cls");main();}
+
         lbuffer();
         system("cls");
     }
-    system("cls");
-    printf("\aTODOS OS DADOS DE PRODUTO FORAM INSERIDOS!\n");
-    printf("\nPressione 'B' para voltar ao menu\n");
-    do{menu = getch();}while(menu != 'B' && menu != 'b');
-    if(menu == 'B' || menu == 'b'){system("cls");main();}
 }
 
 void menu_listar(struct estoque *ps)
 {
-    printf("Quantidade Atual do produto 1: ");
-    scanf("%d", &ps->qtd_atual);
-    printf("%d", ps->qtd_atual);
+
 }
 
 void menu_pesquisar_nome(struct estoque *ps)
