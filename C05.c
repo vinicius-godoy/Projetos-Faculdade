@@ -18,6 +18,7 @@ void lbuffer(void); //Função para limpar o buffer que funciona em todos os SOs
 void escreverEstrutura(struct estoque *ps, char modo[], int linha); //Função pra escrever uma estrutura no arquivo
 void lerEstrutura(struct estoque *ps, int linha); //Função pra ler uma estrutura no arquivo
 void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis da estrutura
+int  fim_arquivo(struct estoque *ps);
 void menu_cadastrar(struct estoque *ps); //Função do menu de cadastramento de produtos
 void menu_listar(struct estoque *ps);
 void menu_pesquisar_nome(struct estoque *ps);
@@ -35,6 +36,7 @@ void main(void)
     system("cls");
     setlocale(LC_ALL, "portuguese"); //Configura o idioma padrão da ASCII pra português
     static struct estoque produto, *ps; //Declaração da estrutura e seu ponteiro
+    static int iteracao = 0; //Declaração da variável que define se o programa acabou de abrir
     int menu; //Declaração da variável do menu principal
 
     ps = &produto;
@@ -141,7 +143,7 @@ void lerEstrutura(struct estoque *ps, int linha)
 {
     FILE *file;
     int i;
-    int _struct = sizeof(struct estoque);
+    int _struct = (sizeof(struct estoque) - 1);
     linha = linha * _struct; //Define o tamanho da linha com todas as variáveis no arquivo
 
     zerar_estrutura(ps); //Zera a estrutura antes de ler do arquivo para evitar lixo
@@ -171,6 +173,20 @@ void zerar_estrutura(struct estoque *ps)
     ps -> ano_validade = 0;
 }
 
+int fim_arquivo(struct estoque *ps)
+{
+    FILE *file;
+    int _struct = (sizeof(struct estoque) - 1);
+    int posicao;
+
+    file = fopen("estoque.txt", "r");
+    fseek(file, 0, SEEK_END);
+    posicao = ftell(file);
+    fclose(file);
+
+    return (posicao/_struct);
+}
+
 void menu_cadastrar(struct estoque *ps)
 {
     int i;
@@ -179,13 +195,13 @@ void menu_cadastrar(struct estoque *ps)
     for(i = 0; menu != 'B' || menu != 'b'; i++){
         printf("Entre com os dados do produto que deseja cadastrar!\n\n");
         printf("==================================|PRODUTO %3d|==================================\n", i + 1);
-        printf("Nome do produto: ", i + 1);
+        printf("Nome do produto: ");
         gets(ps -> nome);
-        printf("Quantidade Atual do produto: ", i + 1);
+        printf("Quantidade Atual do produto: ");
         scanf("%d", &ps -> qtd_atual);
-        printf("Quantidade Mínima do produto: ", i + 1);
+        printf("Quantidade Mínima do produto: ");
         scanf("%d", &ps -> qtd_min);
-        printf("Data de validade do produto (DD/MM/AA): ", i + 1);
+        printf("Data de validade do produto (DD/MM/AA): ");
         scanf("%d/%d/%d", &ps -> dia_validade, &ps -> mes_validade, &ps -> ano_validade);
         printf("=================================================================================\n");
 
@@ -208,12 +224,30 @@ void menu_cadastrar(struct estoque *ps)
 
 void menu_listar(struct estoque *ps)
 {
+    int i;
+    char menu;
 
+    printf("Lista de todos produtos cadastrados\n\n");
+    for(i = 0; i < (fim_arquivo(ps)); i++){
+        lerEstrutura(ps, i);
+        printf("==================================|PRODUTO %3d|==================================\n", i + 1);
+        printf("Nome do produto: %s\n", ps->nome);
+        printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
+        printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
+        printf("Data de validade do produto (DD/MM/AA): %d/%d/%d\n", ps->dia_validade, ps->mes_validade, ps->ano_validade);
+    }
+
+    printf("\nPressione 'B' para voltar ao menu\n");
+    do{menu = getch();}while(menu != 'B' && menu != 'b');
+    if(menu == 'B' || menu == 'b'){system("cls");main();}
+
+    lbuffer();
+    system("cls");
 }
 
 void menu_pesquisar_nome(struct estoque *ps)
 {
-    printf("%d", sizeof(struct estoque)); //Teste do menu
+    fim_arquivo(ps);
 }
 
 void menu_pesquisar_letra(struct estoque *ps)
