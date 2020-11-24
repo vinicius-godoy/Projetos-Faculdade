@@ -124,7 +124,8 @@ void escreverEstrutura(struct estoque *ps, char modo[], int linha)
 {
     FILE *file;
     int i;
-    linha = 0;//linha * 125;
+    int _struct = sizeof(struct estoque);
+    linha = linha * _struct; //Define o tamanho da linha com todas as variáveis no arquivo
 
     file = fopen("estoque.txt", modo);
     if(linha != 0){fseek(file, linha, SEEK_SET);}
@@ -136,16 +137,17 @@ void escreverEstrutura(struct estoque *ps, char modo[], int linha)
     fwrite(&ps -> ano_validade, sizeof(ps -> ano_validade), 1, file);
     fclose(file);
 
-    zerar_estrutura(ps);
+    zerar_estrutura(ps); //Zera a estrutura depois de escrever no arquivo para evitar lixo
 }
 
 void lerEstrutura(struct estoque *ps, int linha)
 {
     FILE *file;
     int i;
-    linha = 0;//linha * 125;
+    int _struct = sizeof(struct estoque);
+    linha = linha * _struct; //Define o tamanho da linha com todas as variáveis no arquivo
 
-    zerar_estrutura(ps);
+    zerar_estrutura(ps); //Zera a estrutura antes de ler do arquivo para evitar lixo
 
     file = fopen("estoque.txt", "r");
     fseek(file, linha, SEEK_SET);
@@ -212,7 +214,7 @@ void menu_listar(struct estoque *ps)
 
 void menu_pesquisar_nome(struct estoque *ps)
 {
-    printf("3"); //Teste do menu
+    printf("%d", sizeof(struct estoque)); //Teste do menu
 }
 
 void menu_pesquisar_letra(struct estoque *ps)
