@@ -13,7 +13,7 @@ Escreva um programa que tem a estrutura de dados abaixo. O programa tem as segui
 - [ ] movimenta quantidade em estoque (entrada e saída).
 - [ ] altera produto pesquisado pelo nome completo.
 - [ ] exclui produto pesquisado pelo nome completo.
-- [ ] saída pelo usuário.
+- [x] saída pelo usuário.
 
 **Estrutura:** nome, quantidade atual, quantidade de estoque mínimo, data de validade do produto. 
 
