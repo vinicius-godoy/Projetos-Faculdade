@@ -19,8 +19,9 @@ void lbuffer(void); //Função para limpar o buffer que funciona em todos os SOs
 void escreverEstrutura(struct estoque *ps, char modo[], int linha); //Função pra escrever uma estrutura no arquivo
 void lerEstrutura(struct estoque *ps, int linha); //Função pra ler uma estrutura no arquivo
 void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis da estrutura
-int  fim_arquivo(struct estoque *ps); //Função que retorna a quantidade de linhas até o fim do arquivo
+int  fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arquivo
 int compara_nome(struct estoque *ps, char nome[]); //Função que compara nomes
+int compara_letra(struct estoque *ps, char letra); //Função que compara letras
 void menu_cadastrar(struct estoque *ps); //Função do menu de cadastramento de produtos
 void menu_listar(struct estoque *ps); //Função do menu de listar produtos
 void menu_pesquisar_nome(struct estoque *ps); //Função do menu de pesquisa de produto por nome
@@ -174,7 +175,7 @@ void zerar_estrutura(struct estoque *ps)
     ps -> ano_validade = 0;
 }
 
-int fim_arquivo(struct estoque *ps)
+int fim_arquivo()
 {
     FILE *file;
     int _struct = (sizeof(struct estoque) - 1);
@@ -200,6 +201,27 @@ int compara_nome(struct estoque *ps, char nome[])
             }
         }
         if(correto == strlen(ps ->nome)){
+            return i; //se o número de letras iguais for igual ao número de letras do nome da struct então retorna o índice do nome igual
+        }
+        correto = 0;
+    }
+
+    return -1; //Se nenhum nome for igual retorna -1
+}
+
+int compara_letra(struct estoque *ps, char letra)
+{
+    int i, correto = 0;
+    char letra2;
+
+    for(i = 0; i < (fim_arquivo(ps)); i++){
+        lerEstrutura(ps, i);
+        if(letra > 'a' && letra < 'z'){letra2 = letra - 32;}
+        else if(letra > 'A' && letra < 'Z'){letra2 = letra + 32;}
+        if(ps -> nome[0] == letra || ps -> nome[0] == letra2){
+            correto++; //Se a letra n da estrutura for igual a letra n do nome, correto incrementa
+        }
+        if(correto == 1){
             return i; //se o número de letras iguais for igual ao número de letras do nome da struct então retorna o índice do nome igual
         }
         correto = 0;
@@ -280,14 +302,20 @@ void menu_pesquisar_nome(struct estoque *ps)
         iteracao = compara_nome(ps, pesquisa);
 
         system("cls");
-        lerEstrutura(ps, iteracao);
-        printf("Procura produto por nome\n\n");
-        printf("Produto com o nome \"%s\"\n", pesquisa);
-        printf("==================================|PRODUTO %3d|==================================\n", iteracao + 1);
-        printf("Nome do produto: %s\n", ps->nome);
-        printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
-        printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
-        printf("Data de validade do produto (DD/MM/AA): %d/%d/%d\n", ps->dia_validade, ps->mes_validade, ps->ano_validade);
+        if(iteracao < 0){
+            printf("Procura produto por nome\n\n");
+            printf("Produto com o nome \"%s\"\n", pesquisa);
+            printf("\aNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
+        }else{
+            lerEstrutura(ps, iteracao);
+            printf("Procura produto por nome\n\n");
+            printf("Produto com o nome \"%s\"\n", pesquisa);
+            printf("==================================|PRODUTO %3d|==================================\n", iteracao + 1);
+            printf("Nome do produto: %s\n", ps->nome);
+            printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
+            printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
+            printf("Data de validade do produto (DD/MM/AA): %d/%d/%d\n", ps->dia_validade, ps->mes_validade, ps->ano_validade);
+        }
 
         printf("\nPressione 'ESPAÇO' para procurar outro produto\n");
         printf("Pressione 'B' para voltar ao menu\n");
@@ -300,7 +328,40 @@ void menu_pesquisar_nome(struct estoque *ps)
 
 void menu_pesquisar_letra(struct estoque *ps)
 {
-    printf("4"); //Teste do menu
+    int i, iteracao;
+    char menu;
+    char pesquisa;
+
+    for(i = 0; menu != 'B' && menu != 'b'; i++){
+        printf("Procura produto por primeira letra\n\n");
+        printf("Digite a primeira letra do produto que deseja procurar: ");
+        pesquisa = getchar();
+        iteracao = compara_letra(ps, pesquisa);
+
+        system("cls");
+        if(iteracao < 0){
+            printf("Procura produto por primeira letra\n\n");
+            printf("Produto com a primeira letra \'%c\'\n", pesquisa);
+            printf("\aNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
+        }else{
+            lerEstrutura(ps, iteracao);
+            printf("Procura produto por primeira letra\n\n");
+            printf("Produto com a primeira letra \'%c\'\n", pesquisa);
+            printf("==================================|PRODUTO %3d|==================================\n", iteracao + 1);
+            printf("Nome do produto: %s\n", ps->nome);
+            printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
+            printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
+            printf("Data de validade do produto (DD/MM/AA): %d/%d/%d\n", ps->dia_validade, ps->mes_validade, ps->ano_validade);
+        }
+
+        printf("\nPressione 'ESPAÇO' para procurar outro produto\n");
+        printf("Pressione 'B' para voltar ao menu\n");
+        do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
+        if(menu == 'B' || menu == 'b'){system("cls");main();}
+
+        lbuffer();
+        system("cls");
+    }
 }
 
 void menu_pesquisar_validade(struct estoque *ps)
