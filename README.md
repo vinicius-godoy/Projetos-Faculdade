@@ -7,7 +7,7 @@ Escreva um programa que tem a estrutura de dados abaixo. O programa tem as segui
 - [x] entra produto.
 - [x] lista produtos na tela.
 - [x] pesquisa um produto pelo nome.
-- [ ] pesquisar um produto pela 1. letra do nome.
+- [x] pesquisar um produto pela 1. letra do nome.
 - [ ] pesquisar data de validade (mês/ano)
 - [ ] lista os produtos abaixo do estoque mínimo. 
 - [ ] movimenta quantidade em estoque (entrada e saída).
