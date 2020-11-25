@@ -9,8 +9,8 @@ struct estoque{
     unsigned char nome[31];
     int qtd_atual; //quantidade atual
     int qtd_min;   //quantidade de estoque mínima
-    int mes_validade;
-    int ano_validade;
+    int mes_validade; //mes da data de validade
+    int ano_validade; //ano da data de validade
 };
 
 //Protótipo das Funções
@@ -18,7 +18,7 @@ void lbuffer(void); //Função para limpar o buffer que funciona em todos os SOs
 void escreverEstrutura(struct estoque *ps, char modo[], int linha); //Função pra escrever uma estrutura no arquivo
 void lerEstrutura(struct estoque *ps, int linha); //Função pra ler uma estrutura no arquivo
 void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis da estrutura
-int  fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arquivo
+int fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arquivo
 int compara_nome(struct estoque *ps, char nome[]); //Função que compara nomes
 int compara_letra(struct estoque *ps, char letra); //Função que compara letras
 void menu_cadastrar(struct estoque *ps); //Função do menu de cadastramento de produtos
@@ -124,8 +124,8 @@ void escreverEstrutura(struct estoque *ps, char modo[], int linha)
 {
     FILE *file;
     int i;
-    int _struct = sizeof(struct estoque);
-    linha = linha * _struct; //Define o tamanho da linha com todas as variáveis no arquivo
+    int _struct = sizeof(struct estoque); //Define o tamanho da estrutura de um produto
+    linha = linha * _struct; //Define até onde o fseek vai pra escrever o dado
 
     file = fopen("estoque.txt", modo);
     if(linha != 0){fseek(file, linha, SEEK_SET);}
@@ -143,8 +143,8 @@ void lerEstrutura(struct estoque *ps, int linha)
 {
     FILE *file;
     int i;
-    int _struct = (sizeof(struct estoque) - 1);
-    linha = linha * _struct; //Define o tamanho da linha com todas as variáveis no arquivo
+    int _struct = (sizeof(struct estoque) - 1); //Define o tamanho da estrutura de um produto
+    linha = linha * _struct; //Define até onde o fseek vai pra buscar o dado
 
     zerar_estrutura(ps); //Zera a estrutura antes de ler do arquivo para evitar lixo
 
@@ -174,14 +174,16 @@ void zerar_estrutura(struct estoque *ps)
 int fim_arquivo()
 {
     FILE *file;
-    int _struct = (sizeof(struct estoque) - 1);
+    int _struct = (sizeof(struct estoque) - 1); //Pega o tamanho da estrutura inteira - 1 (finalizador)
     int posicao;
 
     file = fopen("estoque.txt", "r");
+    //Vai ao final do arquivo e pega a posição pra saber o número de caracteres nele
     fseek(file, 0, SEEK_END);
     posicao = ftell(file);
     fclose(file);
 
+    //Retorna o número de caracteres dividido pelo tamanho da estrutura, ou seja, quantidade de produtos
     return (posicao/_struct);
 }
 
@@ -189,20 +191,21 @@ int compara_nome(struct estoque *ps, char nome[])
 {
     int i, j, correto = 0;
 
+    //Roda o for até o fim do arquivo, pegando o nome de cada produto e vendo se bate com o nome informado
     for(i = 0; i < (fim_arquivo(ps)); i++){
         lerEstrutura(ps, i);
-        for(j = 0; j < strlen(nome); j++){ //j é o número de caracteres do nome a ser comparado
+        for(j = 0; j < strlen(nome); j++){
             if(ps -> nome[j] == nome[j]){
-                correto++; //Se a letra n da estrutura for igual a letra n do nome, correto incrementa
+                correto++;
             }
         }
-        if(correto == strlen(ps ->nome)){
-            return i; //se o número de letras iguais for igual ao número de letras do nome da struct então retorna o índice do nome igual
+        if(correto == strlen(ps ->nome)){ //Se o número de letras corretas for igual ao de letras no nome do produto retorna o índice
+            return i;
         }
         correto = 0;
     }
 
-    return -1; //Se nenhum nome for igual retorna -1
+    return -1;
 }
 
 int compara_letra(struct estoque *ps, char letra)
@@ -210,20 +213,21 @@ int compara_letra(struct estoque *ps, char letra)
     int i, correto = 0;
     char letra2;
 
+    //Roda o for até o fim do arquivo, pegando o nome de cada produto e vendo se a letra informada bate, sendo maiúscula ou minúscula
     for(i = 0; i < (fim_arquivo(ps)); i++){
         lerEstrutura(ps, i);
         if(letra >= 'a' && letra <= 'z'){letra2 = letra - 32;}
         else if(letra >= 'A' && letra <= 'Z'){letra2 = letra + 32;}
         if(ps -> nome[0] == letra || ps -> nome[0] == letra2){
-            correto++; //Se a letra n da estrutura for igual a letra n do nome, correto incrementa
+            correto++;
         }
-        if(correto == 1){
-            return i; //se o número de letras iguais for igual ao número de letras do nome da struct então retorna o índice do nome igual
+        if(correto == 1){ //Se a letra informada, seja maiúscula ou minúscula, for igual ao do produto retorna o indíce do produto
+            return i;
         }
         correto = 0;
     }
 
-    return -1; //Se nenhum nome for igual retorna -1
+    return -1;
 }
 
 void menu_cadastrar(struct estoque *ps)
