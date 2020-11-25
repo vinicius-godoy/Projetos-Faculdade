@@ -22,9 +22,9 @@ void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis d
 int  fim_arquivo(struct estoque *ps); //Função que retorna a quantidade de linhas até o fim do arquivo
 int compara_nome(struct estoque *ps, char nome[]); //Função que compara nomes
 void menu_cadastrar(struct estoque *ps); //Função do menu de cadastramento de produtos
-void menu_listar(struct estoque *ps);
-void menu_pesquisar_nome(struct estoque *ps);
-void menu_pesquisar_letra(struct estoque *ps);
+void menu_listar(struct estoque *ps); //Função do menu de listar produtos
+void menu_pesquisar_nome(struct estoque *ps); //Função do menu de pesquisa de produto por nome
+void menu_pesquisar_letra(struct estoque *ps); //Função do menu de pesquisa de produto por primeira letra
 void menu_pesquisar_validade(struct estoque *ps);
 void menu_listar_qtdmin(struct estoque *ps);
 void menu_movimentar(struct estoque *ps);
@@ -210,10 +210,12 @@ int compara_nome(struct estoque *ps, char nome[])
 
 void menu_cadastrar(struct estoque *ps)
 {
-    int i;
+    int i, iteracao;
     char menu;
 
-    for(i = 0; menu != 'B' || menu != 'b'; i++){
+    iteracao = fim_arquivo(ps);
+
+    for(i = iteracao; menu != 'B' || menu != 'b'; i++){
         printf("Entre com os dados do produto que deseja cadastrar!\n\n");
         printf("==================================|PRODUTO %3d|==================================\n", i + 1);
         printf("Nome do produto: ");
@@ -227,7 +229,7 @@ void menu_cadastrar(struct estoque *ps)
         printf("=================================================================================\n");
 
         //Se é a primeira iteração chama a função como escrita pra resetar arquivo, caso contrário anexa
-        if(i == 0){
+        if(iteracao == 0){
             escreverEstrutura(ps, "w", 0);
         }else{
             escreverEstrutura(ps, "a", 0);
@@ -273,7 +275,7 @@ void menu_pesquisar_nome(struct estoque *ps)
 
     for(i = 0; menu != 'B' && menu != 'b'; i++){
         printf("Procura produto por nome\n\n");
-        printf("Digite o nome o do produto que deseja procurar: ");
+        printf("Digite o nome do produto que deseja procurar: ");
         gets(pesquisa);
         iteracao = compara_nome(ps, pesquisa);
 
