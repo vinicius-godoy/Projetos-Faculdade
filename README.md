@@ -5,23 +5,14 @@
 Escreva um programa que tem a estrutura de dados abaixo. O programa tem as seguintes opções:
 
 - [x] entra produto.
-
-- [ ] lista produtos na tela.
-
-- [ ] pesquisa um produto pelo nome.
-
+- [x] lista produtos na tela.
+- [x] pesquisa um produto pelo nome.
 - [ ] pesquisar um produto pela 1. letra do nome.
-
 - [ ] pesquisar data de validade (mês/ano)
-
 - [ ] lista os produtos abaixo do estoque mínimo. 
-
 - [ ] movimenta quantidade em estoque (entrada e saída).
-
 - [ ] altera produto pesquisado pelo nome completo.
-
 - [ ] exclui produto pesquisado pelo nome completo.
-
 - [ ] saída pelo usuário.
 
 **Estrutura:** nome, quantidade atual, quantidade de estoque mínimo, data de validade do produto. 
