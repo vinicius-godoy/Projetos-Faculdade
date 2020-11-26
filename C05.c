@@ -1,6 +1,5 @@
 #include <stdio.h> //Funções padrões de entrada e saída
 #include <stdlib.h>//Função system
-#include <string.h> //Função strlen
 #include <conio.h> //Funções getch e getche
 #include <locale.h> //Função de configuração de idioma da tabela ASCII
 
@@ -15,11 +14,11 @@ struct estoque{
 
 //Protótipo das Funções
 void lbuffer(void); //Função para limpar o buffer que funciona em todos os SOs
-void escreverEstrutura(struct estoque *ps, char modo[], int linha); //Função pra escrever uma estrutura no arquivo
-void lerEstrutura(struct estoque *ps, int linha); //Função pra ler uma estrutura no arquivo
+void escreverEstrutura(struct estoque *ps, char *modo, int linha); //Função pra escrever uma estrutura no arquivo
+int lerEstrutura(struct estoque *ps, int linha); //Função pra ler uma estrutura no arquivo
 void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis da estrutura
 int fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arquivo
-int compara_nome(struct estoque *ps, char nome[]); //Função que compara nomes
+int compara_nome(struct estoque *ps, char *nome); //Função que compara nomes
 int compara_letra(struct estoque *ps, char letra); //Função que compara letras
 void compara_data(struct estoque *ps, int mes, int ano); //Função que compara data de validade
 void movimenta_estoque(struct estoque *ps, int movimentacao);
@@ -121,7 +120,7 @@ void lbuffer(void)
     } while (c != '\n' && c != EOF);
 }
 
-void escreverEstrutura(struct estoque *ps, char modo[], int linha)
+void escreverEstrutura(struct estoque *ps, char *modo, int linha)
 {
     FILE *file;
     int i;
@@ -130,17 +129,13 @@ void escreverEstrutura(struct estoque *ps, char modo[], int linha)
 
     file = fopen("estoque.txt", modo);
     if(linha != 0){fseek(file, linha, SEEK_SET);}
-    fwrite(ps -> nome, sizeof(ps -> nome), 1, file);
-    fwrite(&ps -> qtd_atual, sizeof(ps -> qtd_atual), 1, file);
-    fwrite(&ps -> qtd_min, sizeof(ps -> qtd_min), 1, file);
-    fwrite(&ps -> mes_validade, sizeof(ps -> mes_validade), 1, file);
-    fwrite(&ps -> ano_validade, sizeof(ps -> ano_validade), 1, file);
+    fwrite(ps, sizeof(*ps), 1, file);
     fclose(file);
 
     zerar_estrutura(ps); //Zera a estrutura depois de escrever no arquivo para evitar lixo
 }
 
-void lerEstrutura(struct estoque *ps, int linha)
+int lerEstrutura(struct estoque *ps, int linha)
 {
     FILE *file;
     int i;
@@ -151,12 +146,10 @@ void lerEstrutura(struct estoque *ps, int linha)
 
     file = fopen("estoque.txt", "r");
     fseek(file, linha, SEEK_SET);
-    fread(ps -> nome, sizeof(ps -> nome), 1, file);
-    fread(&ps -> qtd_atual, sizeof(ps -> qtd_atual), 1, file);
-    fread(&ps -> qtd_min, sizeof(ps -> qtd_min), 1, file);
-    fread(&ps -> mes_validade, sizeof(ps -> mes_validade), 1, file);
-    fread(&ps -> ano_validade, sizeof(ps -> ano_validade), 1, file);
+    i = fread(ps, sizeof(*ps), 1, file);
     fclose(file);
+
+    return i;
 }
 
 void zerar_estrutura(struct estoque *ps)
@@ -187,22 +180,21 @@ int fim_arquivo()
     return (posicao/_struct);
 }
 
-int compara_nome(struct estoque *ps, char nome[])
+int compara_nome(struct estoque *ps, char *nome)
 {
     int i, j, correto = 0;
 
     //Roda o for até o fim do arquivo, pegando o nome de cada produto e vendo se bate com o nome informado
     for(i = 0; i < (fim_arquivo(ps)); i++){
         lerEstrutura(ps, i);
-        for(j = 0; j < strlen(nome); j++){
-            if(ps -> nome[j] == nome[j]){
-                correto++;
+        for(j = 0; nome[j] != '\0'; j++){
+            if(ps -> nome[j] != nome[j]){
+                break;
             }
         }
-        if(correto == strlen(ps ->nome)){ //Se o número de letras corretas for igual ao de letras no nome do produto retorna o índice
+        if(nome[j] == '\0' && ps ->nome[j] == '\0'){ //Se o número de letras corretas for igual ao de letras no nome do produto retorna o índice
             return i;
         }
-        correto = 0;
     }
 
     return -1;
@@ -306,6 +298,7 @@ void menu_cadastrar(struct estoque *ps)
             escreverEstrutura(ps, "ab", 0);
         }
 
+        //Voltar pro menu dps de 1
         printf("\nPressione 'ESPAÇO' para adicionar outro produto\n");
         printf("Pressione 'B' para voltar ao menu\n");
         do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
@@ -318,17 +311,19 @@ void menu_cadastrar(struct estoque *ps)
 
 void menu_listar(struct estoque *ps)
 {
-    int i;
+    int i, fread;
     char menu;
 
     printf("Lista de todos produtos cadastrados\n\n");
-    for(i = 0; i < (fim_arquivo(ps)); i++){
-        lerEstrutura(ps, i);
+    for(i = 0; fread != 0; i++){
+        fread = lerEstrutura(ps, i);
+        printf("%d", fread);
         printf("==================================|PRODUTO %3d|==================================\n", i + 1);
         printf("Nome do produto: %s\n", ps->nome);
         printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
         printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
         printf("Data de validade do produto (MM/AA): %d/%d\n", ps->mes_validade, ps->ano_validade);
+        fread = lerEstrutura(ps, i + 1);
     }
 
     printf("\nPressione 'B' para voltar ao menu\n");
@@ -366,6 +361,7 @@ void menu_pesquisar_nome(struct estoque *ps)
             printf("Data de validade do produto (MM/AA): %d/%d\n", ps->mes_validade, ps->ano_validade);
         }
 
+        //Volta pro menu direto
         printf("\nPressione 'ESPAÇO' para procurar outro produto\n");
         printf("Pressione 'B' para voltar ao menu\n");
         do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
@@ -386,6 +382,7 @@ void menu_pesquisar_letra(struct estoque *ps)
         printf("Digite a primeira letra do produto que deseja procurar: ");
         pesquisa = getchar();
         iteracao = compara_letra(ps, pesquisa);
+        //Listar todos os produtos
 
         system("cls");
         if(iteracao < 0){
@@ -424,6 +421,7 @@ void menu_pesquisar_validade(struct estoque *ps)
         scanf("%d/%d", &mes, &ano);
         compara_data(ps, mes, ano);
 
+        //Tirar opçao de menu
         printf("\nPressione 'ESPAÇO' para procurar outra data\n");
         printf("Pressione 'B' para voltar ao menu\n");
         do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
