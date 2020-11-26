@@ -9,7 +9,7 @@ Escreva um programa que tem a estrutura de dados abaixo. O programa tem as segui
 - [x] pesquisa um produto pelo nome.
 - [x] pesquisar um produto pela 1. letra do nome.
 - [x] pesquisar data de validade (mês/ano)
-- [ ] lista os produtos abaixo do estoque mínimo. 
+- [x] lista os produtos abaixo do estoque mínimo. 
 - [ ] movimenta quantidade em estoque (entrada e saída).
 - [ ] altera produto pesquisado pelo nome completo.
 - [ ] exclui produto pesquisado pelo nome completo.

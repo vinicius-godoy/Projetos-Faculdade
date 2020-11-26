@@ -247,7 +247,29 @@ void compara_data(struct estoque *ps, int mes, int ano)
         }
     }
     if(correto == 0){
-        printf("\aNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
+        printf("\a\nNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
+    }
+}
+
+void compara_estoque(struct estoque *ps)
+{
+    int i, correto;
+
+    for(i = 0; i < (fim_arquivo(ps)); i++){
+        lerEstrutura(ps, i);
+
+        if(ps -> qtd_atual < ps -> qtd_min){
+            printf("==================================|PRODUTO %3d|==================================\n", i + 1);
+            printf("Nome do produto: %s\n", ps->nome);
+            printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
+            printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
+            printf("Data de validade do produto (MM/AA): %d/%d\n", ps->mes_validade, ps->ano_validade);
+            correto++;
+        }
+    }
+
+    if(correto == 0){
+        printf("\a\nNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
     }
 }
 
@@ -410,7 +432,17 @@ void menu_pesquisar_validade(struct estoque *ps)
 
 void menu_listar_qtdmin(struct estoque *ps)
 {
-    printf("6"); //Teste do menu
+    int i;
+    char menu;
+
+    printf("Produtos abaixo do estoque mínimo\n\n");
+    compara_estoque(ps);
+
+    printf("\n\nPressione 'B' para voltar ao menu\n");
+    do{menu = getch();}while(menu != 'B' && menu != 'b');
+    if(menu == 'B' || menu == 'b'){system("cls");main();}
+
+    system("cls");
 }
 
 void menu_movimentar(struct estoque *ps)
