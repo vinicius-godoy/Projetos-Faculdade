@@ -21,6 +21,7 @@ void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis d
 int fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arquivo
 int compara_nome(struct estoque *ps, char nome[]); //Função que compara nomes
 int compara_letra(struct estoque *ps, char letra); //Função que compara letras
+void compara_data(struct estoque *ps, int mes, int ano); //Função que compara data de validade
 void menu_cadastrar(struct estoque *ps); //Função do menu de cadastramento de produtos
 void menu_listar(struct estoque *ps); //Função do menu de listar produtos
 void menu_pesquisar_nome(struct estoque *ps); //Função do menu de pesquisa de produto por nome
@@ -182,7 +183,6 @@ int fim_arquivo()
     fseek(file, 0, SEEK_END);
     posicao = ftell(file);
     fclose(file);
-
     //Retorna o número de caracteres dividido pelo tamanho da estrutura, ou seja, quantidade de produtos
     return (posicao/_struct);
 }
@@ -230,6 +230,27 @@ int compara_letra(struct estoque *ps, char letra)
     return -1;
 }
 
+void compara_data(struct estoque *ps, int mes, int ano)
+{
+    int i, correto = 0;
+
+    for(i = 0; i < (fim_arquivo(ps)); i++){
+        lerEstrutura(ps, i);
+
+        if(ps -> mes_validade == mes && ps -> ano_validade == ano){
+            printf("==================================|PRODUTO %3d|==================================\n", i + 1);
+            printf("Nome do produto: %s\n", ps->nome);
+            printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
+            printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
+            printf("Data de validade do produto (MM/AA): %d/%d\n", ps->mes_validade, ps->ano_validade);
+            correto++;
+        }
+    }
+    if(correto == 0){
+        printf("\aNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
+    }
+}
+
 void menu_cadastrar(struct estoque *ps)
 {
     int i, iteracao;
@@ -253,9 +274,9 @@ void menu_cadastrar(struct estoque *ps)
 
         //Se é a primeira iteração chama a função como escrita pra resetar arquivo, caso contrário anexa
         if(iteracao == 0){
-            escreverEstrutura(ps, "w", 0);
+            escreverEstrutura(ps, "wb", 0);
         }else{
-            escreverEstrutura(ps, "a", 0);
+            escreverEstrutura(ps, "ab", 0);
         }
 
         printf("\nPressione 'ESPAÇO' para adicionar outro produto\n");
@@ -367,7 +388,24 @@ void menu_pesquisar_letra(struct estoque *ps)
 
 void menu_pesquisar_validade(struct estoque *ps)
 {
-    printf("5"); //Teste do menu
+    int mes, ano, iteracao, i;
+    char menu;
+
+    for(i = 0; menu != 'B' && menu != 'b'; i++){
+        printf("Produtos vencidos na data específica\n\n");
+        printf("Data da validade (MM/AA): ");
+        scanf("%d/%d", &mes, &ano);
+        compara_data(ps, mes, ano);
+
+        printf("\nPressione 'ESPAÇO' para procurar outra data\n");
+        printf("Pressione 'B' para voltar ao menu\n");
+        do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
+        if(menu == 'B' || menu == 'b'){system("cls");main();}
+
+        lbuffer();
+        system("cls");
+    }
+
 }
 
 void menu_listar_qtdmin(struct estoque *ps)
