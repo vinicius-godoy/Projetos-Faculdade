@@ -139,7 +139,7 @@ int lerEstrutura(struct estoque *ps, int linha)
 {
     FILE *file;
     int i;
-    int _struct = (sizeof(struct estoque) - 1); //Define o tamanho da estrutura de um produto
+    int _struct = sizeof(struct estoque); //Define o tamanho da estrutura de um produto
     linha = linha * _struct; //Define até onde o fseek vai pra buscar o dado
 
     zerar_estrutura(ps); //Zera a estrutura antes de ler do arquivo para evitar lixo
@@ -298,14 +298,9 @@ void menu_cadastrar(struct estoque *ps)
             escreverEstrutura(ps, "ab", 0);
         }
 
-        //Voltar pro menu dps de 1
-        printf("\nPressione 'ESPAÇO' para adicionar outro produto\n");
-        printf("Pressione 'B' para voltar ao menu\n");
-        do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
-        if(menu == 'B' || menu == 'b'){system("cls");main();}
-
         lbuffer();
         system("cls");
+        main();
     }
 }
 
@@ -317,7 +312,6 @@ void menu_listar(struct estoque *ps)
     printf("Lista de todos produtos cadastrados\n\n");
     for(i = 0; fread != 0; i++){
         fread = lerEstrutura(ps, i);
-        printf("%d", fread);
         printf("==================================|PRODUTO %3d|==================================\n", i + 1);
         printf("Nome do produto: %s\n", ps->nome);
         printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
@@ -326,11 +320,10 @@ void menu_listar(struct estoque *ps)
         fread = lerEstrutura(ps, i + 1);
     }
 
-    printf("\nPressione 'B' para voltar ao menu\n");
-    do{menu = getch();}while(menu != 'B' && menu != 'b');
-    if(menu == 'B' || menu == 'b'){system("cls");main();}
-
+    printf("\n");
+    system("pause");
     system("cls");
+    main();
 }
 
 void menu_pesquisar_nome(struct estoque *ps)
@@ -361,13 +354,10 @@ void menu_pesquisar_nome(struct estoque *ps)
             printf("Data de validade do produto (MM/AA): %d/%d\n", ps->mes_validade, ps->ano_validade);
         }
 
-        //Volta pro menu direto
-        printf("\nPressione 'ESPAÇO' para procurar outro produto\n");
-        printf("Pressione 'B' para voltar ao menu\n");
-        do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
-        if(menu == 'B' || menu == 'b'){system("cls");main();}
-
+        printf("\n");
+        system("pause");
         system("cls");
+        main();
     }
 }
 
