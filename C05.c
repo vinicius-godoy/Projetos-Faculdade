@@ -22,6 +22,7 @@ int fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arqu
 int compara_nome(struct estoque *ps, char nome[]); //Função que compara nomes
 int compara_letra(struct estoque *ps, char letra); //Função que compara letras
 void compara_data(struct estoque *ps, int mes, int ano); //Função que compara data de validade
+void movimenta_estoque(struct estoque *ps, int movimentacao);
 void menu_cadastrar(struct estoque *ps); //Função do menu de cadastramento de produtos
 void menu_listar(struct estoque *ps); //Função do menu de listar produtos
 void menu_pesquisar_nome(struct estoque *ps); //Função do menu de pesquisa de produto por nome
@@ -39,7 +40,6 @@ void main(void)
     system("cls");
     setlocale(LC_ALL, "portuguese"); //Configura o idioma padrão da ASCII pra português
     static struct estoque produto, *ps; //Declaração da estrutura e seu ponteiro
-    static int iteracao = 0; //Declaração da variável que define se o programa acabou de abrir
     int menu; //Declaração da variável do menu principal
 
     ps = &produto;
@@ -273,6 +273,11 @@ void compara_estoque(struct estoque *ps)
     }
 }
 
+void movimenta_estoque(struct estoque *ps, int movimentacao)
+{
+
+}
+
 void menu_cadastrar(struct estoque *ps)
 {
     int i, iteracao;
@@ -447,7 +452,47 @@ void menu_listar_qtdmin(struct estoque *ps)
 
 void menu_movimentar(struct estoque *ps)
 {
-    printf("7"); //Teste do menu
+    int i, iteracao, movimentacao;
+    char menu;
+    char pesquisa[31];
+
+    for(i = 0; menu != 'B' && menu != 'b'; i++){
+        printf("Movimenta quantidade em estoque\n\n");
+        printf("Digite o nome do produto que deseja movimentar: ");
+        gets(pesquisa);
+        iteracao = compara_nome(ps, pesquisa);
+
+        system("cls");
+        if(iteracao < 0){
+            printf("Procura produto por nome\n\n");
+            printf("Produto com o nome \"%s\"\n", pesquisa);
+            printf("\aNENHUM PRODUTO COM OS REQUISITOS ENCONTRADOS\n\n");
+        }else{
+            lerEstrutura(ps, iteracao);
+            printf("Procura produto por nome\n\n");
+            printf("Produto com o nome \"%s\"\n", pesquisa);
+            printf("==================================|PRODUTO %3d|==================================\n", iteracao + 1);
+            printf("Nome do produto: %s\n", ps->nome);
+            printf("Quantidade Atual do produto: %d\n", ps->qtd_atual);
+            printf("Quantidade Mínima do produto: %d\n", ps->qtd_min);
+            printf("Data de validade do produto (MM/AA): %d/%d\n", ps->mes_validade, ps->ano_validade);
+
+            printf("\nNúmero Positivo = Adiciona | Número Negativo = Subtrai\n");
+            printf("Digite aqui qual será a movimentação de seu estoque -> ");
+            scanf("%d", &movimentacao);
+            movimenta_estoque(ps, movimentacao);
+
+            system("cls");
+            printf("\aESTOQUE MOVIMENTADO COM SUCESSO!\n");
+        }
+
+        printf("\nPressione 'ESPAÇO' para movimentar outro produto\n");
+        printf("Pressione 'B' para voltar ao menu\n");
+        do{menu = getch();}while(menu != 'B' && menu != 'b' && menu != ' ');
+        if(menu == 'B' || menu == 'b'){system("cls");main();}
+
+        system("cls");
+    }
 }
 
 void menu_alterar(struct estoque *ps)
