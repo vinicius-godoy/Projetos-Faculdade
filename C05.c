@@ -17,7 +17,6 @@ void lbuffer(void); //Função para limpar o buffer que funciona em todos os SOs
 void escreverEstrutura(struct estoque *ps, char *modo, int linha); //Função pra escrever uma estrutura no arquivo
 int lerEstrutura(struct estoque *ps, int linha); //Função pra ler uma estrutura no arquivo
 void zerar_estrutura(struct estoque *ps); //Função que zera todas as variáveis da estrutura
-int fim_arquivo(); //Função que retorna a quantidade de linhas até o fim do arquivo
 int compara_nome(struct estoque *ps, char *nome); //Função que compara nomes
 int compara_letra(struct estoque *ps, char letra); //Função que compara letras
 void compara_data(struct estoque *ps, int mes, int ano); //Função que compara data de validade
