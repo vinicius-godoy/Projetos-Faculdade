@@ -165,28 +165,13 @@ void zerar_estrutura(struct estoque *ps)
     ps -> ano_validade = 0;
 }
 
-int fim_arquivo()
-{
-    FILE *file;
-    int _struct = (sizeof(struct estoque) - 1); //Pega o tamanho da estrutura inteira - 1 (finalizador)
-    int posicao;
-
-    file = fopen("estoque.txt", "r");
-    //Vai ao final do arquivo e pega a posição pra saber o número de caracteres nele
-    fseek(file, 0, SEEK_END);
-    posicao = ftell(file);
-    fclose(file);
-    //Retorna o número de caracteres dividido pelo tamanho da estrutura, ou seja, quantidade de produtos
-    return (posicao/_struct);
-}
-
 int compara_nome(struct estoque *ps, char *nome)
 {
-    int i, j, correto = 0;
+    int i, j, correto = 0, fread = 1;
 
     //Roda o for até o fim do arquivo, pegando o nome de cada produto e vendo se bate com o nome informado
-    for(i = 0; i < (fim_arquivo(ps)); i++){
-        lerEstrutura(ps, i);
+    for(i = 0; fread != 0; i++){
+        fread = lerEstrutura(ps, i);
         for(j = 0; nome[j] != '\0'; j++){
             if(ps -> nome[j] != nome[j]){
                 break;
@@ -202,7 +187,7 @@ int compara_nome(struct estoque *ps, char *nome)
 
 int compara_letra(struct estoque *ps, char letra)
 {
-    int i, fread, correto = 0;
+    int i, fread = 1, correto = 0;
     char letra2;
 
     //Roda o for até o fim do arquivo, pegando o nome de cada produto e vendo se a letra informada bate, sendo maiúscula ou minúscula
@@ -226,10 +211,10 @@ int compara_letra(struct estoque *ps, char letra)
 
 void compara_data(struct estoque *ps, int mes, int ano)
 {
-    int i, correto = 0;
+    int i, correto = 0, fread = 1;
 
-    for(i = 0; i < (fim_arquivo(ps)); i++){
-        lerEstrutura(ps, i);
+    for(i = 0; fread != 0; i++){
+        fread = lerEstrutura(ps, i);
 
         if(ps -> mes_validade == mes && ps -> ano_validade == ano){
             printf("==================================|PRODUTO %3d|==================================\n", i + 1);
@@ -247,10 +232,10 @@ void compara_data(struct estoque *ps, int mes, int ano)
 
 void compara_estoque(struct estoque *ps)
 {
-    int i, correto;
+    int i, correto = 0, fread = 1;
 
-    for(i = 0; i < (fim_arquivo(ps)); i++){
-        lerEstrutura(ps, i);
+    for(i = 0; fread != 0; i++){
+        fread = lerEstrutura(ps, i);
 
         if(ps -> qtd_atual < ps -> qtd_min){
             printf("==================================|PRODUTO %3d|==================================\n", i + 1);
@@ -269,9 +254,13 @@ void compara_estoque(struct estoque *ps)
 
 void menu_cadastrar(struct estoque *ps)
 {
-    int iteracao;
+    int iteracao, fread = 1;
 
-    iteracao = fim_arquivo(ps);
+    //Laço for para saber qual é o último produto cadastrado e continuar de lá
+    for(iteracao = 0; fread != 0; iteracao++){
+        fread = lerEstrutura(ps, iteracao);
+    }
+    iteracao --; //Decremento pelo fato da contagem do produto no programa começar do 1 e não do 0
     printf("Entre com os dados do produto que deseja cadastrar!\n\n");
     printf("==================================|PRODUTO %3d|==================================\n", iteracao + 1);
     printf("Nome do produto: ");
@@ -293,7 +282,7 @@ void menu_cadastrar(struct estoque *ps)
 
 void menu_listar(struct estoque *ps)
 {
-    int i, fread;
+    int i, fread = 1;
     char menu;
 
     printf("Lista de todos produtos cadastrados\n\n");
