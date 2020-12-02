@@ -11,7 +11,6 @@ struct estoque{
     int mes_validade; //mes da data de validade
     int ano_validade; //ano da data de validade
 };
-
 //Protótipo das Funções
 void lbuffer(void); //Função para limpar o buffer que funciona em todos os SOs
 void escreverEstrutura(struct estoque *ps, char *modo, int linha); //Função pra escrever uma estrutura no arquivo
@@ -42,7 +41,7 @@ void main(void)
 
     ps = &produto;
 
-    printf("MENU\n");
+    printf("===================|MENU|===================\n");
     printf(" 1. Cadastrar produto\n");
     printf(" 2. Listar produtos cadastrados\n");
     printf(" 3. Pesquisar produto por nome\n");
@@ -447,8 +446,8 @@ void menu_excluir(struct estoque *ps)
     int iteracao;
     char pesquisa[31];
 
-    printf("Alterar Produtos Cadastrados\n\n");
-    printf("Digite o nome do produto que deseja alterar: ");
+    printf("Excluir Produtos Cadastrados\n\n");
+    printf("Digite o nome do produto que deseja excluir: ");
     gets(pesquisa);
     iteracao = compara_nome(ps, pesquisa);
     if(iteracao < 0){
