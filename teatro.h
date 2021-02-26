@@ -2,66 +2,69 @@
 #define TEATRO_H_INCLUDED
 
 #include <iostream>
+#include <cstdlib>
+
 class Teatro{
 private:
-    char *lugares;
     int linhas;
     int colunas;
+    char *lugares;
 public:
-    /* Construtores */
+    /* Construtor */
     Teatro(int lin, int col){
-        lugares = new char[lin*col];
         linhas = lin; colunas = col;
+        lugares = new char[linhas * colunas];
 
-        for(int i = 0; i < lin*col; i++){
+        for (int i=0;i<linhas*colunas;i++){
             lugares[i] = ' ';
         }
+    }
+    /* Destructor */
+    ~Teatro(){
+        delete[] lugares;
     }
 
     /* Métodos comuns */
     int reservar(int lin, int col){
-        int i;
-        // \/ Fórmula pra converter os indíces da matriz bidimensional nos do vetor unidimensional
-        i = ((lin - 1) * colunas) + (col - 1);
-        if(lugares[i] == 'x')
-            return 0;
-        else
-            lugares[i] = 'x';
-        return 1;
+        if(lugares[lin*colunas+col] == 'x'){
+            return 0; //Retorna 0 se o lugar que quer reservar já tiver sido reservado
+        }else{
+            lugares[lin*colunas+col] = 'x';
+            return 1; //Reserva o lugar e retorna 1 se houver sucesso
+        }
     }
     int trocar(int lin, int col, int lin2, int col2){
-        int i, j;
-        i = ((lin - 1) * colunas) + (col - 1);
-        j = ((lin2 - 1) * colunas) + (col2 - 1);
+        int v, v2;
+        v = lin*colunas+col; //Fórmula do vetor do lugar que vai ser trocado
+        v2 = lin2*colunas+col2; //Fórmula do vetor do lugar que vai ser pego
 
-        if(lugares[i] == ' ')
-            return 0;
-        else if(lugares[j] == 'x')
-            return -1;
-        else{
-            lugares[i] = ' ';
-            lugares[j] = 'x';
-            return 1;
+        if(lugares[v] == ' '){
+            return 0; //Retorna 0 se o lugar que deseja trocar não tiver sido reservado ainda
+        }else if(lugares[v2] == 'x'){
+            return -1; //Retorna -1 se o lugar que deseja pegar na troca já tiver sido reservado
+        }else{
+            lugares[v] = ' ';
+            lugares[v2] = 'x';
+            return 1; //Troca os lugares e retorna 1 se houver sucesso
         }
     }
     int devolver(int lin, int col){
-        int i;
-        i = ((lin - 1) * colunas) + (col - 1);
-        if(lugares[i] == ' ')
-            return 0;
-        else
-            lugares[i] = ' ';
-        return 1;
+        if(lugares[lin*colunas+col] == ' '){
+            return 0; //Retorna 0 se o lugar que quer devolvido não tiver sido reservado ainda
+        }else{
+            lugares[lin*colunas+col] = ' ';
+            return 1; //Devolve o lugar e retorna 1 se houver sucesso
+        }
     }
 
     /* Métodos Get */
-    char* getLugares(){
-        return lugares;
+    char getLugar(int lin, int col){
+        return lugares[lin*colunas+col];
     }
-    unsigned int getLin(){
+    int getLin(){
         return linhas;
     }
-    unsigned int getCol(){
+    int getCol(){
         return colunas;
     }
 };

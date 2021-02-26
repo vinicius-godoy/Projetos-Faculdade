@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1614112749 source:c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\teatro\main.cpp
+1614365701 source:c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\teatro\main.cpp
 	<iostream>
+	<iomanip>
 	<cstdlib>
 	<clocale>
 	"contador.h"
@@ -8,6 +9,7 @@
 
 1613522729 c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\teatro\contador.h
 
-1614113073 c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\teatro\teatro.h
+1614365741 c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\teatro\teatro.h
 	<iostream>
+	<cstdlib>
 
