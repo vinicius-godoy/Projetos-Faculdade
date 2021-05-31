@@ -1,0 +1,9 @@
+# depslib dependency file v1.0
+1613518324 source:c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\contador\main.cpp
+	<iostream>
+	<cstdlib>
+	<clocale>
+	"contador.h"
+
+1613518464 c:\users\cliente\desktop\vinicius\facul\estrutura de dados\exercícios\contador\contador.h
+
