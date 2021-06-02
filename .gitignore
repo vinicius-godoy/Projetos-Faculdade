@@ -1,6 +1,8 @@
-#Arquivos de Obj e Executáveis
+#Arquivos e Pastas de Obj, Executáveis e Binários
 *.o
 *.exe
+/bin
+/obj
 #Arquivos do CodeBlocks
 *.cbp
 *.layout
