@@ -5,5 +5,7 @@
 *.cbp
 *.layout
 *.depend
+#Arquivos gerados pelo Vscode
+tempCodeRunnerFile
 #Arquivos gerados por Main
 *.txt
