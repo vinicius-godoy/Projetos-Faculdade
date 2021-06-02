@@ -9,5 +9,5 @@
 *.depend
 #Arquivos gerados pelo Vscode
 tempCodeRunnerFile
-#Arquivos gerados por Main
+#Outras extensões de arquivo
 *.txt
