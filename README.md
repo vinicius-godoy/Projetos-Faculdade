@@ -19,6 +19,10 @@ Programa de console em **C** que funciona como se fosse um gerenciador de cadast
 
 Programa de console em **C** que funciona como um gerenciador de estoque, serviu como prática do uso de structs, ponteiros e funções de manipulação de arquivo durante as aulas de Linguagem de Programação. Tem como funcionalidades entrada de produtos, listagem, pesquisa por nome, primeira letra e data de validade, listagem condicional, movimentação de estoque, alteração e exclusão de produtos. 
 
+## Exercícios com Classes em C++
+
+Vários arquivos de programas em **C++** com seus respectivos arquivos de header que serviram pra prática da implementação e uso de classes, feitos nas aulas de Estrutura de Dados. Não vou atualizar nenhum dos arquivos de headers de estrutura de dados nesse repositório, tudo que eu arrumar vai pro [repositório de estrutura de dados](https://github.com/vinicius-godoy/Estruturas-de-Dados) que eu tenho.
+
 ## Ar-Condicionado em C++
 
 Projeto de um programa de console em **C++** para aprendizado e prática da linguagem C++ e os conceitos de orientação a objeto nas aulas de Estruturas de Dados. Composto por uma main e um header da classe `Arcondicionado` criados em aula. Tem como funcionalidades ligar/desligar, aumentar e diminuir a temperatura.
