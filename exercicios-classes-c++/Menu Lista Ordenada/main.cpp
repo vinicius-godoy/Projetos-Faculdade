@@ -8,7 +8,8 @@ using namespace std;
 int main(){
     setlocale(LC_ALL, "portuguese");
     Lista<int> lista;
-    int opc, valor, verifica;
+    int opc, valor;
+    bool verifica;
     Node<int> *aux;
 
     do{
@@ -74,6 +75,8 @@ int main(){
                 cout << aux->info << " ";
                 aux = aux->prox;
             }
+            cout << endl;
+            system("pause");
             break;
         }
 
